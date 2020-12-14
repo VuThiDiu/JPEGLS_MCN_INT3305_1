@@ -1,6 +1,7 @@
 import numpy as np
-import Math
-import System.Drawing
+import math
+from  Bits import * 
+#import System.Drawing
 
 class JPEGLSEncode:
     byteManager = Bits()
@@ -11,11 +12,11 @@ class JPEGLSEncode:
         self.C_MAX = 127
         self.C_MIN = -128
         self.MAXVAL = 255
-        self.bpp = np.int32(max(2, Math.ceil(Math.log(MAXVAL + 1, 2))))
+        self.bpp = np.int32(max(2, math.ceil(math.log(MAXVAL + 1, 2))))
         self.LIMIT = 2 * (bpp + max(8, bpp))
         self.SIGN = 1
-        self.RANGE = Math.abs(MAXVAL + 2*NEAR) / (2*NEAR + 1) + 1
-        self.qbpp = int(Math.log(self.RANGE,2))
+        self.RANGE = abs(MAXVAL + 2*NEAR) / (2*NEAR + 1) + 1
+        self.qbpp = int(math.log(self.RANGE,2))
 
         self.N = [0]*367
         self.Nn = [0]*367
@@ -46,8 +47,9 @@ class JPEGLSEncode:
         self.width = image.Width
         self.height = image.Height
     
-    def Encode(image, n = 0):
-        self.image = System.Drawing.Bitmap(image)
+    def Encode(self, data, n):
+        #self.image = System.Drawing.Bitmap(image)
+        self.image = data
         self.__init__(n)
 
         # Testing
@@ -60,9 +62,9 @@ class JPEGLSEncode:
 
         while ((posX + 1)*(posY+1) < width*height):
             self.GetNextSample()
-            if (Math.abs(self.D[0]) <= NEAR and 
-                Math.abs(self.D[1]) <= NEAR and
-                Math.abs(self.D[2]) <= NEAR):
+            if (abs(self.D[0]) <= NEAR and 
+                abs(self.D[1]) <= NEAR and
+                abs(self.D[2]) <= NEAR):
                 self.RunModeProcessing()
                 pass
             else:
@@ -151,7 +153,7 @@ class JPEGLSEncode:
         def RunLengthDetermination():
             RUNval = self.a
             RUNcnt = 0  #represent the run length
-            while (Math.abs(self.x - RUNval) <= NEAR):
+            while (abs(self.x - RUNval) <= NEAR):
                 RUNcnt += 1
                 Rx = RUNval
                 if (posX == 0):
@@ -168,7 +170,7 @@ class JPEGLSEncode:
             
             self.PrevRunIndex = RunIndex
             self.SIGNinterupt = false
-            if (Math.abs(self.x - RUNval) > NEAR):
+            if (abs(self.x - RUNval) > NEAR):
                 SIGNinterupt = true
                 byteManager.append(0)
                 for i in range(J[RUNindex], 0,-1):               
@@ -214,7 +216,7 @@ class JPEGLSEncode:
                 mmap = 0
 
             #
-            EMErrval = 2 * Math.abs(Errval) - RItype - mmap
+            EMErrval = 2 * abs(Errval) - RItype - mmap
 
             if (not SIGNinterupt):
                 return
@@ -237,7 +239,7 @@ class JPEGLSEncode:
 
         
         def IndexComuptation():
-            if (Math.abs(a - b) <= NEAR):
+            if (abs(a - b) <= NEAR):
                 RItype = 1
             else:
                 RItype = 0
@@ -391,7 +393,7 @@ class JPEGLSEncode:
 
         def UpdateVariables(errval):
             B[contextOfX] = B[contextOfX] + errval * (2 * NEAR + 1)
-            A[contextOfX] = A[contextOfX] + Math.abs(errval)
+            A[contextOfX] = A[contextOfX] + abs(errval)
             if (N[contextOfX] == RESET):
                 A[contextOfX] = A[contextOfX] >> 1
                 if (B[contextOfX] >= 0):
