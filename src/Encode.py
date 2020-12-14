@@ -1,6 +1,9 @@
 import numpy as np
-import Math
+import math
+from Bits import *
 import System.Drawing
+from TestEncoding import *
+
 
 class JPEGLSEncode:
     byteManager = Bits()
@@ -11,10 +14,10 @@ class JPEGLSEncode:
         self.C_MAX = 127
         self.C_MIN = -128
         self.MAXVAL = 255
-        self.bpp = np.int32(max(2, Math.ceil(Math.log(MAXVAL + 1, 2))))
+        self.bpp = np.int32(max(2, math.ceil(math.log(MAXVAL + 1))))
         self.LIMIT = 2 * (bpp + max(8, bpp))
         self.SIGN = 1
-        self.RANGE = Math.abs(MAXVAL + 2*NEAR) / (2*NEAR + 1) + 1
+        self.RANGE = abs(MAXVAL + 2*NEAR) / (2*NEAR + 1) + 1
         self.qbpp = int(Math.log(self.RANGE,2))
 
         self.N = [0]*367
@@ -425,7 +428,7 @@ class JPEGLSEncode:
         def mmin(i, j):
             return j if j < i else i
 
-        def Populate(arr, value):
+    def Populate(arr, value):
             n = len(arr)
             for i in range(n):
-                arr[i] = value
+                arr[i] = value   

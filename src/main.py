@@ -1,4 +1,4 @@
-from Encode import *
+from JPEGLSEncode import *
 class  Program:
     def main():
         args = list()
