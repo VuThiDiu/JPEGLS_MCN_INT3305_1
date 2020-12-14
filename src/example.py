@@ -1,8 +1,9 @@
 import os
-import PIL.Image
+from PIL import Image
 import numpy as np
-import jpeg_ls
+from Encode import *
 import cv2
+
 
 def read(fp):
     """Read image data from file-like object using PIL.  Return Numpy array.
@@ -28,40 +29,50 @@ def write(fp, data, fmt=None, **kwargs):
 
 
 # Read in an image from an existing PNG file.
-fname_img = 'test/bee.png'
-data_image = read(fname_img)
+img = Image.open('bee.png').convert('LA')
+img.save('bee.png')
+img =  cv2.imread('bee.png')
+img = cv2.resize(img, (600, 400))
+cv2.imshow('Image Test', img)
+cv2.waitKey(0)
+
+dataImage = np.asarray(img)
+
+data_buffer = JPEGLSEncode.Encode(dataImage, 0)
+# fname_img = 'bee.png'
+# data_image = read(fname_img)
 
 
-image = cv2.imread('test/bee.png')
-image = cv2.resize(image, (600, 400))
+# image = cv2.imread('bee.png')
+# image = cv2.resize(image, (600, 400))
 
 # cv2.imshow('image', image)
 # cv2.waitKey(0)
-print(np.asarray(image))
+# print(np.asarray(image))
 
-data_image = np.asarray(image)
-data_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-print(data_image.shape)
+# data_image = np.asarray(image)
+# data_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+# print(data_image.shape)
 
-# This input image should be a numpy array.
-print('\nData properties:')
-print('Type:  {:s}'.format(str(data_image.dtype)))
-print('Shape: {:s}'.format(str(data_image.shape)))
+# # This input image should be a numpy array.
+# print('\nData properties:')
+# print('Type:  {:s}'.format(str(data_image.dtype)))
+# print('Shape: {:s}'.format(str(data_image.shape)))
 
-# # Compress image data to a sequence of bytes.
-data_buffer = jpeg_ls.encode(data_image)
+# # # Compress image data to a sequence of bytes.
+# data_buffer = JPEGLSEncode.Encode(data_image)
 
 
-print('\nSize of uncompressed image data: {:n}'.format(len(data_image.tostring())))
-print('Size of JPEG-LS encoded data:    {:n}'.format(len(data_buffer)))
+# print('\nSize of uncompressed image data: {:n}'.format(len(data_image.tostring())))
+# print('Size of JPEG-LS encoded data:    {:n}'.format(len(data_buffer)))
 
-# Decompress.
-data_image_b = jpeg_ls.decode(data_buffer)
+# # # Decompress.
+# # data_image_b = jpeg_ls.decode(data_buffer)
 
-# Compare image data, before and after.
-is_same = (data_image == data_image_b).all()
-print('\nRestored data is identical to original? {:s}\n'.format(str(is_same)))
+# # # Compare image data, before and after.
+# # is_same = (data_image == data_image_b).all()
+# # print('\nRestored data is identical to original? {:s}\n'.format(str(is_same)))
 
-cv2.imshow('Origin', data_image)
-cv2.imshow('After encode and decode', data_image_b)
-cv2.waitKey(0)
+# # cv2.imshow('Origin', data_image)
+# # cv2.imshow('After encode and decode', data_image_b)
+# # cv2.waitKey(0)
