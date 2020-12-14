@@ -2,6 +2,10 @@ import numpy as np
 import math
 from  Bits import * 
 #import System.Drawing
+=======
+from Bits import *
+import System.Drawing
+from TestEncoding import *
 
 class JPEGLSEncode:
     byteManager = Bits()
@@ -427,7 +431,7 @@ class JPEGLSEncode:
         def mmin(i, j):
             return j if j < i else i
 
-        def Populate(arr, value):
+    def Populate(arr, value):
             n = len(arr)
             for i in range(n):
-                arr[i] = value
+                arr[i] = value   

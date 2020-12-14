@@ -1,4 +1,4 @@
-import Math
+import math
 import numpy as np
 class Golomb:
     def Encode(byteManager, k, Merrval, limit,  qbpp):
@@ -12,7 +12,7 @@ class Golomb:
             byteManager.append(1)
             comp = np.int32(2**(k-1))
             for i in range(k,0,-1): 
-                if (comp & r) == comp):
+                if ((comp & r) == comp):
                     byteManager.append(1)
                 else:
                     byteManager.append(0)
