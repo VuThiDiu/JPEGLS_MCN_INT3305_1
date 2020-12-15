@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 import numpy as np
-from Encode import *
+from Encode import JPEGLSEncode
 import cv2
 
 
@@ -32,13 +32,23 @@ def write(fp, data, fmt=None, **kwargs):
 img = Image.open('bee.png').convert('LA')
 img.save('bee.png')
 img =  cv2.imread('bee.png')
-img = cv2.resize(img, (600, 400))
-cv2.imshow('Image Test', img)
-cv2.waitKey(0)
-
+img = cv2.resize(img, (75, 50))
+# cv2.imshow('Image Test', img)
+# cv2.waitKey(0)
 dataImage = np.asarray(img)
+dataImage = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+example =  JPEGLSEncode()
+# data_buffer = example.Encode(dataImage)
+# print(data_buffer)
 
-data_buffer = JPEGLSEncode.Encode(dataImage, 0)
+data_buffer = example.Encode([[0,0,90,74],[68, 50, 43, 205], [64, 145, 145, 145], [100, 145, 145, 145]])
+print(data_buffer)
+
+
+
+
+
+
 # fname_img = 'bee.png'
 # data_image = read(fname_img)
 

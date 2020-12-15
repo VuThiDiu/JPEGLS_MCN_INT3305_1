@@ -3,4 +3,8 @@ class Bits:
     bits = list()
     def add(self, value):
         self.bits.append(value)
+
+# byteManage = Bits()
+# byteManage.add(True)
+# print(byteManage.bits)
     
