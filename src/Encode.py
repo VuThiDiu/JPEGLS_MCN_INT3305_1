@@ -55,31 +55,19 @@ class JPEGLSEncode:
         self.RUNindex = 0
         self.bitLine = 0
         self.data_buffer=  []
-        self.count = 0
-        # self.LD = []
-        # self.x =  0   
-        # self.a =0
-        # self.b =0
-        # self.c = 0
-        # self.d = 0
-        # self.Errval = 0
-        # self.RItype = 0
-        # self.RUNval = 0
-        # self.Runval = 0
-        # self.N_MAX =  0
-        # self.C_MIN =0
-        # self.C_MAx = 0
-        # self.contextOfX = 0
-        # self
+        self.x =  0   
+        self.a =0
+        self.b =0
+        self.c = 0
+        self.d = 0
     byteManager = Bits()
     
     def Encode(self, data):
-        #self.image = System.Drawing.Bitmap(image)
         self.image = data
-        # self.width = data.shape[1]
-        # self.height = data.shape[0]
-        self.width = 4
-        self.height = 4
+        self.width = data.shape[1]
+        self.height = data.shape[0]
+        # self.width = 4
+        # self.height = 4
         self.bpp = np.int32(max(2, math.ceil(math.log(self.MAXVAL + 1, 2))))
         self.LIMIT = 2 * (self.bpp + max(8, self.bpp))
         self.RANGE = abs(self.MAXVAL + 2*self.NEAR) / (2*self.NEAR + 1) + 1
@@ -88,31 +76,19 @@ class JPEGLSEncode:
         Populate(self.Nn, 0)
         Populate(self.B, 0)
         Populate(self.C, 0)
-        Populate(self.A,int( max(2, (self.RANGE + 32) / 64)))
-        # self.__init__(n)
-
-        # Testing
-        # self.LD = TestingEncoding.Input8()
-        # bitsE = TestingEncoding.Result8()
-        # bitLine = 0
-
-        # self.width = 4
-        # self.height = 4
-        count = 0
-        for x in range(self.height):
-            for y in range (self.width):
-                self.LD = self.image[x]
-                self.GetNextSample()
-                if (abs(self.D[0]) <= self.NEAR and 
-                    abs(self.D[1]) <= self.NEAR and
-                    abs(self.D[2]) <= self.NEAR):
-                    self.RunModeProcessing()
-                    pass
-                else:
-                    self.RegularModeProcessing()
-                self.data_buffer.append(self.PrintBits())
-                self.byteManager.bits.clear()
-        print(self.count)
+        Populate(self.A,int( max(2, (self.RANGE + 32) / 64))) 
+        while  (self.posX<self.width) and (self.posY<self.height):
+            self.GetNextSample()
+            if (abs(self.D[0]) <= self.NEAR and 
+                abs(self.D[1]) <= self.NEAR and
+                abs(self.D[2]) <= self.NEAR):
+                self.RunModeProcessing()
+                pass
+            else:
+                self.RegularModeProcessing()
+            
+            self.data_buffer.append(self.PrintBits())
+            self.byteManager.bits.clear()
         return self.data_buffer
         
         
@@ -124,10 +100,10 @@ class JPEGLSEncode:
         self.D[2] = self.c - self.a
 
         self.posX += 1
-
         if (self.posX == self.width):
-            self.posX = 0
-            self.posY = 0
+            self.posX = 0 
+            self.posY += 1
+            
         return False
 
     #set Ra, Rb, Rc, Rd, Rx
@@ -136,48 +112,47 @@ class JPEGLSEncode:
         if (self.posX == 0 and self.posY == 0):
             self.a = 0
         elif (self.posY > 0 and self.posX == 0):
-            self.a = self.LD[(self.posY - 1)*self.width]
+            self.a = int (str(self.image[self.posY-1][0]))
         elif (self.posY == 0 and self.posX > 0):
-            self.a = self.LD[self.posX - 1]
+            self.a = int (str(self.image[0][self.posX - 1]))
         else:
-            self.a = self.LD[(self.posY*self.width) + self.posX - 1]
+            self.a = int (str(self.image[self.posY][self.posX - 1]))
 
         #set b
         if (self.posY == 0):
             self.b = 0
         else:
-            self.b = self.LD[(self.posY - 1)*self.width + self.posX]
+            self.b = int (str(self.image[self.posY - 1][self.posX]))
         
         #set c
         if (self.posY == 0 or (self.posY == 1 and self.posX == 0)):
             self.c = 0
         elif (self.posY > 1 and self.posX == 0):
-            self.c = self.LD[(self.posY - 2)*self.width]
+            self.c =int (str(self.image[self.posY-2][0]) )
         else:
-            self.c = self.LD[(self.posY - 1)* self.width + self.posX - 1]
+            self.c = int (str(self.image[(self.posY - 1)][ self.posX - 1]))
 
         #set d
         if (self.posY == 0):
             self.d = 0
         elif (self.posY > 0 and self.posX == self.width - 1):
-            self.d = self.LD[(self.posY - 1) * self.width + self.posX]
+            self.d = int(str(self.image[(self.posY - 1)][ self.posX]))
         else:
-            self.d = self.LD[((self.posY - 1) * self.width) + self.posX + 1];
+            self.d = int(str(self.image[(self.posY - 1)][ self.posX + 1]))
 
         #set x
-        self.x = self.LD[self.posY*self.width + self.posX]
+        self.x = int(str(self.image[self.posY][self.posX]))
 
     def PrintBits(self):
-        # result = []
-        # for i in self.byteManager.bits:
-        #     self.count +=1
-        #     result.append(i)
-        # return result
-        result = ""
-        for  i in self.byteManager.bits:
-            result += str(i)
+        result = []
+        for i in self.byteManager.bits:
+            result.append(i)
         return result
-        # self.data_buffer.append(self.byteManager.bits)
+        # result = ""
+        # for  i in self.byteManager.bits:
+        #     result += str(i)
+        # return result
+        #self.data_buffer.append(self.byteManager.bits)
 
     #run mode
     def RunModeProcessing(self):
@@ -193,6 +168,7 @@ class JPEGLSEncode:
             self.Rx = self.RUNval
             if (self.posX == 0):
                 break
+                
             else:
                 self.GetNextSample()
 

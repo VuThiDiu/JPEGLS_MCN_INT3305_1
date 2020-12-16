@@ -3,6 +3,7 @@ from PIL import Image
 import numpy as np
 from Encode import JPEGLSEncode
 import cv2
+from TestEncoding import *
 
 
 def read(fp):
@@ -32,17 +33,24 @@ def write(fp, data, fmt=None, **kwargs):
 img = Image.open('bee.png').convert('LA')
 img.save('bee.png')
 img =  cv2.imread('bee.png')
-img = cv2.resize(img, (75, 50))
-# cv2.imshow('Image Test', img)
-# cv2.waitKey(0)
+img = cv2.resize(img, (600, 400))
+cv2.imshow('Image Test', img)
+cv2.waitKey(0)
 dataImage = np.asarray(img)
 dataImage = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 example =  JPEGLSEncode()
-# data_buffer = example.Encode(dataImage)
+data_buffer = example.Encode(dataImage)
 # print(data_buffer)
+# test = TestEncoding()
+# test_str = test.Result8()
+# data_buffer = example.Encode([[0,0,90,74],[68,50,43,205], [64,145,145,145], [100,145,145,145]])
+# for x in range(len(test_str)):
+#     if (data_buffer[x] == test_str[x]):
+#         print("True")
+#     else: print("No")
+    
 
-data_buffer = example.Encode([[0,0,90,74],[68, 50, 43, 205], [64, 145, 145, 145], [100, 145, 145, 145]])
-print(data_buffer)
+# print(data_buffer)
 
 
 
@@ -65,16 +73,16 @@ print(data_buffer)
 # print(data_image.shape)
 
 # # This input image should be a numpy array.
-# print('\nData properties:')
-# print('Type:  {:s}'.format(str(data_image.dtype)))
-# print('Shape: {:s}'.format(str(data_image.shape)))
+print('\nData properties:')
+print('Type:  {:s}'.format(str(dataImage.dtype)))
+print('Shape: {:s}'.format(str(dataImage.shape)))
 
 # # # Compress image data to a sequence of bytes.
 # data_buffer = JPEGLSEncode.Encode(data_image)
 
 
-# print('\nSize of uncompressed image data: {:n}'.format(len(data_image.tostring())))
-# print('Size of JPEG-LS encoded data:    {:n}'.format(len(data_buffer)))
+print('\nSize of uncompressed image data: {:n}'.format(len(dataImage.tobytes())))
+print('Size of JPEG-LS encoded data:    {:n}'.format(len(data_buffer)))
 
 # # # Decompress.
 # # data_image_b = jpeg_ls.decode(data_buffer)

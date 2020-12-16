@@ -1,10 +1,10 @@
 class TestEncoding:
-    def input8():
+    def input8(self):
         return [0,  0,  90, 74,
                 68, 50, 43, 205,
                 64, 145,145,145,
                 100,145,145,145]
-    def Result8():
+    def Result8(self):
         return ["1100000000000000000000000110110010",
                 "00000000100",
                 "0001000111",
